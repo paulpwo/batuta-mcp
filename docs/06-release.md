@@ -1,19 +1,24 @@
-# Release checklist (owner only)
+# Releases
 
-A release is a version tag plus a GitHub Release with notes. Nothing is published to npm: people install BatutaMCP from this repository (see [SETUP.md](../SETUP.md)). The tag and the Release are created by the owner; no workflow runs on tags.
+A release is a version tag plus a GitHub Release with notes, and both are created automatically. Nothing is published to npm: people install BatutaMCP from this repository (see [SETUP.md](../SETUP.md)).
 
-## Before tagging
+## How a release happens
 
-- [ ] `main` is green in CI (`CI / test`).
-- [ ] Run the local suites once: server (`cd server && pnpm test`), loudness (`node --test "loudness/test/*.test.ts"`), installer (`node --test "installer/test/*.test.mjs"`), Remote Script (`python3 -I -B -m unittest discover -s tests/remote_script -t .`).
-- [ ] `CHANGELOG.md`: move the version out of "Unreleased" and add the date. `server/package.json` carries the same version.
-- [ ] `server/package.json` keeps `"private": true` so the package can never be published to npm by accident.
+`.github/workflows/release.yml` runs after every green `CI` run started by a push to `main`. It reads the version from `server/package.json` and creates the tag `vX.Y.Z` and its GitHub Release, with that version's `CHANGELOG.md` section as the notes, when both hold:
 
-## Tag and Release
+- `CHANGELOG.md` has a dated section for the version: `## [X.Y.Z] - YYYY-MM-DD` (a section still marked `Unreleased` is skipped);
+- the tag `vX.Y.Z` does not exist yet.
 
-1. Commit the CHANGELOG change on `main` and push it.
-2. Create the tag on that commit and push it: `git tag -a vX.Y.Z -m "vX.Y.Z"` then `git push origin vX.Y.Z`.
-3. Create the GitHub Release from the tag with a short "What's new" list taken from the CHANGELOG: `gh release create vX.Y.Z --title vX.Y.Z --notes-file <notes.md>`. No assets: GitHub attaches the source archives itself.
+Any other push to `main` does nothing. A failing CI run never releases.
+
+## Cutting a version
+
+In one commit on `main`:
+
+1. Set the new version in `server/package.json`.
+2. Rename the `Unreleased` section of `CHANGELOG.md` to `## [X.Y.Z] - YYYY-MM-DD`.
+
+Push it. When CI passes, the workflow tags that exact commit and publishes the Release. `server/package.json` keeps `"private": true` so the package can never reach npm by accident.
 
 ## Repository settings (once)
 
