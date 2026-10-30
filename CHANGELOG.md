@@ -2,6 +2,17 @@
 
 All notable changes are documented here. The format follows Keep a Changelog and the project uses Semantic Versioning.
 
+## [0.2.0] - 2026-10-30
+
+### Added
+- One-command install and upgrade: `curl -fsSL https://github.com/paulpwo/batuta-mcp/releases/latest/download/install.sh | bash`. `install.sh` checks macOS and Node 22.14+, downloads the latest release archive, verifies its SHA-256, unpacks it into `~/.batuta-mcp` (previous copy kept as `~/.batuta-mcp.previous`), installs the Remote Script, registers `batutaMCP` with Claude Code and adds it to Claude Desktop's config. Options `--dry-run` and `--version vX.Y.Z`.
+- Releases now attach a prebuilt archive (`batuta-mcp-vX.Y.Z.tar.gz`), its SHA-256, stable-named copies and `install.sh`, built and packed automatically by the release workflow (`installer/pack-release.mjs`).
+- A test that fails when `server/package.json`, `server/src/version.ts` and `remote_script/BatutaMCP/limits.py` carry different versions.
+
+### Changed
+- Docs: roadmap for Codex and ChatGPT support, and the not-affiliated notice now covers Anthropic and OpenAI trademarks.
+- README, SETUP and docs/02-install lead with the one-command install; the manual steps are now "From source". The installer no longer prints a sync step specific to one machine, and the docs say to install the latest release tag and that pnpm 12 is needed only to build from source.
+
 ## [0.1.0] - 2026-10-30
 
 First release.

@@ -4,7 +4,7 @@ Every constant here mirrors one row of the spec so a change is a one-line, revie
 """
 
 PROTOCOL_VERSION = 1
-SCRIPT_VERSION = "0.1.0"
+SCRIPT_VERSION = "0.2.0"
 
 # Framing and JSON shape.
 MAX_FRAME_BYTES = 1_048_576

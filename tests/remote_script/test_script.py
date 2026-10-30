@@ -3,7 +3,7 @@ import time
 import unittest
 from unittest import mock
 
-from remote_script.BatutaMCP import BatutaScript, create_instance
+from remote_script.BatutaMCP import BatutaScript, create_instance, limits
 
 from . import fakes
 
@@ -135,7 +135,7 @@ class HandshakeAndWelcomeTests(ScriptTestCase):
         _, welcome = self.connect()
         self.assertEqual(welcome, {
             "type": "welcome", "protocol": 1, "live_version": "12.4.7",
-            "script_version": "0.1.0", "edition": "lite", "edition_source": "detected",
+            "script_version": limits.SCRIPT_VERSION, "edition": "lite", "edition_source": "detected",
             "max_frame": 1048576,
             "limits": {"max_inflight": 16, "rate_per_s": 50, "burst": 100},
         })

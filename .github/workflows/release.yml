@@ -3,7 +3,8 @@ name: Release
 # Creates the version tag and the GitHub Release by itself after CI passes on main.
 # The version comes from server/package.json; a release happens only when CHANGELOG.md
 # has a dated section for that version ("## [X.Y.Z] - YYYY-MM-DD", not "Unreleased")
-# and the tag vX.Y.Z does not exist yet. Nothing is published to npm.
+# and the tag vX.Y.Z does not exist yet. The Release carries the prebuilt archive, its
+# SHA-256 and install.sh (see docs/06-release.md). Nothing is published to npm.
 on:
   workflow_run:
     workflows: [CI]
@@ -21,7 +22,7 @@ jobs:
     # Only a green CI run started by a push to main (never a pull request).
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     permissions:
       contents: write # create the tag and the Release
     steps:
@@ -50,16 +51,57 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "release=true" >> "$GITHUB_OUTPUT"
 
-      - name: Create the tag and the GitHub Release
+      - name: Check the tag is new
+        id: fresh
         if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" > /dev/null 2>&1 || git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" > /dev/null 2>&1; then
+            echo "v$VERSION already exists; nothing to do."
+            echo "new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # actions/setup-node v4.4.0 (pinned commit)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        if: steps.fresh.outputs.new == 'true'
+        with:
+          node-version: 22.20.0 # same exact pin as ci.yml
+
+      # The corepack bundled with Node 22 cannot activate pnpm 12, so install the exact version with npm.
+      - name: Install pnpm 12.1.0
+        if: steps.fresh.outputs.new == 'true'
+        run: |
+          npm install --global pnpm@12.1.0
+          pnpm --version
+
+      - name: Build the server
+        if: steps.fresh.outputs.new == 'true'
+        working-directory: server
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run build
+
+      - name: Pack the release assets
+        if: steps.fresh.outputs.new == 'true'
+        run: node installer/pack-release.mjs --out "$RUNNER_TEMP/assets"
+
+      - name: Create the tag and the GitHub Release
+        if: steps.fresh.outputs.new == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           VERSION: ${{ steps.version.outputs.version }}
           SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
-          if gh release view "v$VERSION" > /dev/null 2>&1 || git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" > /dev/null 2>&1; then
-            echo "v$VERSION already exists; nothing to do."
-            exit 0
-          fi
-          gh release create "v$VERSION" --target "$SHA" --title "v$VERSION" --notes-file "$RUNNER_TEMP/notes.md"
+          assets="$RUNNER_TEMP/assets"
+          gh release create "v$VERSION" --target "$SHA" --title "v$VERSION" --notes-file "$RUNNER_TEMP/notes.md" \
+            "$assets/batuta-mcp-v$VERSION.tar.gz" \
+            "$assets/batuta-mcp-v$VERSION.tar.gz.sha256" \
+            "$assets/batuta-mcp.tar.gz" \
+            "$assets/batuta-mcp.tar.gz.sha256" \
+            "$assets/install.sh"

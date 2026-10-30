@@ -562,8 +562,7 @@ export function nextSteps({ bin = binInfo(), node = process.execPath, linked = f
     ...desktop.split('\n').map((l) => '       ' + l),
   );
   lines.push(
-    '  3. Optional, owner-specific: ~/.claude/scripts/sync-mcp-tp.sh syncs the personal Claude account\'s MCP servers to tp-claude.',
-    '  4. Keep `batuta_confirm` on "ask" in your client permissions (see README, security model).',
+    '  3. Keep `batuta_confirm` on "ask" in your client permissions (see README, security model).',
   );
   return lines;
 }
@@ -580,7 +579,6 @@ export function uninstallInstructions({ home } = {}) {
     ('     Also the archive of old versions, if present: ' + (prevRoot)),
     '  4. Remove the MCP registration:',
     '       claude mcp remove batutaMCP --scope user',
-    '     (and run ~/.claude/scripts/sync-mcp-tp.sh if you use the tp-claude account).',
     ('  5. Optional: move ' + (path.join(h, 'Library', 'Application Support', SCRIPT_NAME)) + ' to the Trash (socket, token, server.json).'),
     '  Do not touch the other folders in Remote Scripts; they are separate.',
   ];

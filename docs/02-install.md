@@ -1,8 +1,16 @@
 # Operator notes: install and coexistence
 
-For the owner. Everything here is manual and local; nothing is published or uploaded.
+Everything here is manual and local; nothing is uploaded.
 
-## Install order
+## One-command install
+
+```sh
+curl -fsSL https://github.com/paulpwo/batuta-mcp/releases/latest/download/install.sh | bash
+```
+
+`install.sh` (repo root, attached to every release) downloads `batuta-mcp.tar.gz` and its `.sha256` from the latest release, verifies the checksum, refuses archive entries with absolute paths, `..` or links, and swaps the unpacked tree into `~/.batuta-mcp` (the old one becomes `~/.batuta-mcp.previous`; it refuses a symlinked target or a folder that is not a BatutaMCP install). Then it runs the Remote Script installer below, re-registers `batutaMCP` with Claude Code (`claude mcp remove` then `claude mcp add --scope user`, with the absolute node path and the hardening flag) and merges the same entry into Claude Desktop's `claude_desktop_config.json` when Claude Desktop is installed (see [Claude Desktop](#claude-desktop)). Options: `--dry-run` (write nothing), `--version vX.Y.Z`. Environment: `BATUTA_HOME_DIR` (install folder), `BATUTA_DOWNLOAD_BASE` (where the assets are fetched from). The manual steps below are the same installation done from a checkout.
+
+## Install order (from source)
 
 1. `node installer/install.mjs install --dry-run`, read the plan, then `install` without the flag.
 2. `node installer/install.mjs verify` (hashes vs manifest and vs the package) and `status`.
@@ -10,13 +18,12 @@ For the owner. Everything here is manual and local; nothing is published or uplo
 4. `status` again: the runtime dir `~/Library/Application Support/BatutaMCP/` should exist, mode 0700, with `token` (0600) and `live.sock`. The installer never creates it; the Remote Script does when it loads.
 5. Build the server (`cd server && pnpm install --frozen-lockfile && pnpm run build`) and register it. Use the command the installer prints:
    `claude mcp add --scope user batutaMCP -- '<abs path of node>' --disallow-code-generation-from-strings '<abs path>/server/dist/src/bin.js'`. The node path is the one that ran the installer (`process.execPath`), so registration works even when `node` is not on Claude Code's PATH (nvm), and the code-generation flag is always passed. Fallback, only when node is on your client's PATH: register the binary itself (`... -- '<abs path>/server/dist/src/bin.js'`); the build makes it executable, and if it does not the installer prints a `chmod 755 '<path>'` line for that fallback.
-6. Optional, owner-specific: `~/.claude/scripts/sync-mcp-tp.sh` copies the personal account's MCP servers to tp-claude. Run it with the target account closed.
-7. In Claude Code permissions keep `batuta_confirm` on "ask". For Claude Desktop see the next section.
-8. Optional, for the host automation tools (`new_set`, `save_set`, `save_set_as`, `export_audio`): System Settings > Privacy & Security > Accessibility, enable the app that runs your MCP client (Terminal, iTerm, Claude, ...). The first use may also ask to let that app control System Events (Automation). `launch_live` and `open_set` need neither. Set `host.enabled` to `false` in `server.json` to remove these tools. See `docs/04-host-automation.md`.
+6. In Claude Code permissions keep `batuta_confirm` on "ask". For Claude Desktop see the next section.
+7. Optional, for the host automation tools (`new_set`, `save_set`, `save_set_as`, `export_audio`): System Settings > Privacy & Security > Accessibility, enable the app that runs your MCP client (Terminal, iTerm, Claude, ...). The first use may also ask to let that app control System Events (Automation). `launch_live` and `open_set` need neither. Set `host.enabled` to `false` in `server.json` to remove these tools. See `docs/04-host-automation.md`.
 
 ## Claude Desktop
 
-Claude Desktop (macOS) can use the same server. The installer prints a ready-to-paste block after the `claude mcp add` lines; it never reads or writes Claude Desktop's config.
+Claude Desktop (macOS) can use the same server. `install.sh` adds the `batutaMCP` entry to `~/Library/Application Support/Claude/claude_desktop_config.json` for you (other servers and keys untouched; a timestamped `.bak-` copy first; atomic write; a symlinked or invalid-JSON file is refused and the block is printed instead). Then fully quit Claude Desktop (Cmd-Q) and reopen it. The steps below are the manual path, used when you install from source: the Remote Script installer prints a ready-to-paste block and never touches that file.
 
 1. Open `~/Library/Application Support/Claude/claude_desktop_config.json` and paste the printed block. If the file already has an `mcpServers` object, merge only the `batutaMCP` entry into it.
 2. The `command` must be the absolute path of `node` (the block uses the one that ran the installer). Claude Desktop does not load your shell PATH, so a bare `node` will not start.
@@ -54,7 +61,7 @@ BatutaMCP uses its own Remote Scripts folder (`BatutaMCP`), its own AF_UNIX sock
 
 ## Upgrades
 
-Re-run `install`. If the installed folder is an unmodified earlier BatutaMCP install, the new version is staged in `~/Music/Ableton/User Library/BatutaMCP-previous/.staging-<random>` (outside `Remote Scripts`, so a failed install never leaves a loadable package there), the old folder is renamed to `BatutaMCP-previous/BatutaMCP-<UTC time>`, and the staged folder is renamed into `Remote Scripts/BatutaMCP`. All three folders are on the same volume, so each step is one atomic rename. The path of the archived version is printed. Old versions are kept outside `Remote Scripts` on purpose: Live would list them as control surfaces, and a second BatutaMCP instance would fight for `live.sock`. Move them to the Trash when you are done. If you edited an installed file, or the folder is not ours, the installer refuses and changes nothing.
+Run the one-command install again. From a source checkout, check out the newest release tag (`git fetch --tags`, then `git checkout <tag>`; tags are listed on the Releases page) or unpack its Source code archive, rebuild the server, and re-run `install`. If the installed folder is an unmodified earlier BatutaMCP install, the new version is staged in `~/Music/Ableton/User Library/BatutaMCP-previous/.staging-<random>` (outside `Remote Scripts`, so a failed install never leaves a loadable package there), the old folder is renamed to `BatutaMCP-previous/BatutaMCP-<UTC time>`, and the staged folder is renamed into `Remote Scripts/BatutaMCP`. All three folders are on the same volume, so each step is one atomic rename. The path of the archived version is printed. Old versions are kept outside `Remote Scripts` on purpose: Live would list them as control surfaces, and a second BatutaMCP instance would fight for `live.sock`. Move them to the Trash when you are done. If you edited an installed file, or the folder is not ours, the installer refuses and changes nothing.
 
 ## Development: link mode
 

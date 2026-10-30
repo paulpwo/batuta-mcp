@@ -4,7 +4,7 @@
 
 An MCP server for Ableton Live. It lets an MCP client (such as Claude Code) read and edit a Live 12 set: transport, tracks, mixer, scenes, clips and notes, devices, racks, browser loading, arrangement, and "ears" (loudness and spectrum measurements of a track or the master).
 
-BatutaMCP is an independent project and is not affiliated with, endorsed by or sponsored by Ableton. Ableton and Live are trademarks of Ableton AG.
+BatutaMCP is an independent project and is not affiliated with, endorsed by or sponsored by Ableton. Ableton and Live are trademarks of Ableton AG. Claude is a trademark of Anthropic; ChatGPT and Codex are trademarks of OpenAI. BatutaMCP is not affiliated with, endorsed by or sponsored by Anthropic or OpenAI either.
 
 ## Status
 
@@ -19,10 +19,41 @@ Quickstart: [SETUP.md](SETUP.md). Also see [CONTRIBUTING.md](CONTRIBUTING.md), [
 - macOS.
 - Ableton Live 12.4 or later: Lite, Standard or Suite.
 - Node.js 22.14 or later (for the server and the installer).
+- pnpm 12 only to build from source: `npm install --global pnpm@12.1.0` (the corepack bundled with Node 22 cannot activate pnpm 12).
 
 ## Install
 
-1. Copy the Remote Script (dry run first):
+The short version is in [SETUP.md](SETUP.md).
+
+One command installs BatutaMCP, and the same command upgrades it:
+
+```sh
+curl -fsSL https://github.com/paulpwo/batuta-mcp/releases/latest/download/install.sh | bash
+```
+
+It downloads the latest release, checks its SHA-256, unpacks it into `~/.batuta-mcp` (the previous copy is kept as `~/.batuta-mcp.previous`), installs the Remote Script for Live, and registers the server with Claude Code (`claude`) and Claude Desktop when they are installed. It needs macOS and Node.js 22.14 or later; no pnpm, no build, no sudo. Claude Desktop's config gets only the `batutaMCP` entry (backup first; a config that is not valid JSON is left alone and the entry is printed instead).
+
+- Preview without writing anything: end the command with `bash -s -- --dry-run` instead of `bash`.
+- A specific release: `bash -s -- --version v0.1.0`.
+- Read the script first: [install.sh](install.sh) (short and commented).
+
+One manual step remains: in Live, Settings > Link, Tempo & MIDI > Control Surface: choose **BatutaMCP** (Input and Output: None), and restart Live. Then restart Claude Code (fully quit and reopen Claude Desktop) and ask for `batuta_status`.
+
+### From source
+
+For development, or to build it yourself.
+
+1. Get the latest release (a version tag; `main` may hold unreleased work):
+
+   ```sh
+   git clone https://github.com/paulpwo/batuta-mcp.git
+   cd batuta-mcp
+   git checkout "$(git describe --tags --abbrev=0)"
+   ```
+
+   Or download the Source code archive of the [latest release](https://github.com/paulpwo/batuta-mcp/releases/latest) and unpack it.
+
+2. Copy the Remote Script (dry run first):
 
    ```sh
    node installer/install.mjs install --dry-run
@@ -36,15 +67,15 @@ Quickstart: [SETUP.md](SETUP.md). Also see [CONTRIBUTING.md](CONTRIBUTING.md), [
 
    Other commands: `verify` (re-hash the install against its manifest and the package), `status`, `uninstall-instructions`.
 
-2. In Live: Settings > Link, Tempo & MIDI > Control Surface: choose **BatutaMCP** (Input and Output: None). Restart Live if it was running. On load the script creates `~/Library/Application Support/BatutaMCP/` (mode 0700) with the socket and a random token.
+3. In Live: Settings > Link, Tempo & MIDI > Control Surface: choose **BatutaMCP** (Input and Output: None). Restart Live if it was running. On load the script creates `~/Library/Application Support/BatutaMCP/` (mode 0700) with the socket and a random token.
 
-3. Build the server (dev dependencies are `typescript` and `@types/node` only; nothing is installed at runtime):
+4. Build the server (dev dependencies are `typescript` and `@types/node` only; nothing is installed at runtime):
 
    ```sh
    cd server && pnpm install --frozen-lockfile && pnpm run build
    ```
 
-4. Register it with your MCP client. For Claude Code:
+5. Register it with your MCP client. For Claude Code:
 
    ```sh
    claude mcp add --scope user batutaMCP -- '/absolute/path/to/node' --disallow-code-generation-from-strings '/absolute/path/to/server/dist/src/bin.js'
@@ -133,6 +164,11 @@ node installer/install.mjs uninstall-instructions
 ```
 
 prints the manual steps: set the control surface to None, quit Live, move `~/Music/Ableton/User Library/Remote Scripts/BatutaMCP` to the Trash (and `~/Music/Ableton/User Library/BatutaMCP-previous`, the archive of older versions, if present), run `claude mcp remove batutaMCP --scope user`. The installer never deletes anything itself.
+
+## Roadmap
+
+- **OpenAI Codex CLI**: planned. Register BatutaMCP from the installer (Codex runs local MCP servers over stdio like Claude Code). To verify: confirmation prompts (elicitation) and server instructions.
+- **ChatGPT**: planned. It needs a remote (HTTP) transport, because ChatGPT connects to MCP servers over the network rather than starting a local process. It will get its own security design (authentication, a local-only listener behind a tunnel) before it ships.
 
 ## License
 

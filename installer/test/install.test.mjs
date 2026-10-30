@@ -687,8 +687,14 @@ test('CLI: install --dry-run prints plan and the manual next steps', () => {
   const node = "'" + process.execPath.split("'").join("'\\''") + "'";
   assert.ok(out.includes('claude mcp add --scope user batutaMCP -- ' + node + ' --disallow-code-generation-from-strings '), out);
   assert.match(out, /--disallow-code-generation-from-strings '[^']*server\/dist\/src\/bin\.js'/);
-  assert.match(out, /sync-mcp-tp\.sh/);
+  assert.doesNotMatch(out, /sync-mcp-tp|tp-claude|owner-specific/);
   assert.deepEqual(fs.readdirSync(home), []);
+});
+
+test('uninstall instructions name no personal scripts or accounts', () => {
+  const out = execFileSync(process.execPath, [INSTALL_JS, 'uninstall-instructions', '--home', home], { encoding: 'utf8' });
+  assert.match(out, /claude mcp remove batutaMCP --scope user/);
+  assert.doesNotMatch(out, /sync-mcp-tp|tp-claude/);
 });
 
 test('CLI: real install, verify and status via --home; refusal exits 1; usage exits 2', () => {
