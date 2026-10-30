@@ -14,8 +14,8 @@ Thanks for helping. This project is security-sensitive, so a few rules are firm.
 
 ```sh
 cd server && pnpm install --frozen-lockfile && pnpm test
-node --test loudness/test/
-node --test installer/test/
+node --test "loudness/test/*.test.ts"
+node --test "installer/test/*.test.mjs"
 python3 -I -B -m unittest discover -s tests/remote_script -t .
 ```
 

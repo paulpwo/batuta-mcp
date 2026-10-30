@@ -42,10 +42,10 @@ jobs:
         run: pnpm test
 
       - name: Loudness tests
-        run: node --test loudness/test/
+        run: node --test "loudness/test/*.test.ts"
 
       - name: Installer tests
-        run: node --test installer/test/
+        run: node --test "installer/test/*.test.mjs"
 
       # actions/setup-python v5.6.0 (pinned commit)
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0

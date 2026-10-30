@@ -20,4 +20,4 @@ Only the latest published release receives security fixes.
 
 ## Supply chain
 
-Releases are published from GitHub Actions with npm trusted publishing (no long-lived token), carry npm provenance and a build attestation, and ship a CycloneDX SBOM. The server has no runtime dependencies.
+Releases are version tags on this repository with a GitHub Release; nothing is published to npm. CI runs with read-only permissions and actions pinned to full commit SHAs. The server has no runtime dependencies and the Remote Script uses the Python standard library only.
