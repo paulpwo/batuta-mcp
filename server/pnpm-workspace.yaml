@@ -1,0 +1,10 @@
+# Supply-chain hardening (owner decision 2026-10-27).
+# Dependency install/lifecycle scripts never run: strictDepBuilds fails the install if any
+# dependency wants to build, and no package is on the allowBuilds list.
+strictDepBuilds: true
+dangerouslyAllowAllBuilds: false
+allowBuilds: {}
+# Only install versions published at least 7 days ago (minutes).
+minimumReleaseAge: 10080
+# A version without a publish time cannot prove it is old enough, so it is refused too.
+minimumReleaseAgeIgnoreMissingTime: false

@@ -1,0 +1,7 @@
+{
+  "name": "batuta-loudness",
+  "private": true,
+  "type": "module",
+  "description": "Pure TypeScript BS.1770-5 / EBU R128 loudness engine. Compiled into the server package by the server build; no dependencies.",
+  "license": "MIT"
+}

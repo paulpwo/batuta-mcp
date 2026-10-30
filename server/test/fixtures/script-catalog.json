@@ -1,0 +1,1409 @@
+{
+ "_about": "Generated from remote_script/BatutaMCP command_set.build_registry(): catalog entries plus top-level argument names. Regenerate with the one-off script described in test/README.md.",
+ "commands": [
+  {
+   "name": "arrangement_clip_create",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "length",
+    "name",
+    "start",
+    "track"
+   ],
+   "required": [
+    "length",
+    "start",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "arrangement_clips",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "from",
+    "limit",
+    "offset",
+    "to",
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "arrangement_commit_scene",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "allow_overwrite"
+   ],
+   "props": [
+    "allow_overwrite",
+    "scene",
+    "time",
+    "tracks"
+   ],
+   "required": [
+    "scene",
+    "time"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "arrangement_duplicate",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "allow_overwrite"
+   ],
+   "props": [
+    "allow_overwrite",
+    "source",
+    "time",
+    "track"
+   ],
+   "required": [
+    "source",
+    "time",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "audio_clip_create",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "allow_overwrite"
+   ],
+   "props": [
+    "allow_overwrite",
+    "expected_length_beats",
+    "file_path",
+    "position",
+    "slot",
+    "track"
+   ],
+   "required": [
+    "file_path",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "back_to_arranger",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "batch",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "ops"
+   ],
+   "props": [
+    "ops",
+    "stop_on_error"
+   ],
+   "required": [
+    "ops"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "browser_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "category",
+    "limit",
+    "offset",
+    "path"
+   ],
+   "required": [
+    "category"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "browser_load",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "track",
+    "uri"
+   ],
+   "required": [
+    "track",
+    "uri"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "browser_search",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "category",
+    "limit",
+    "loadable_only",
+    "query"
+   ],
+   "required": [
+    "query"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "capture_midi",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "catalog",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "chain_set",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "volume",
+    "volume_db"
+   ],
+   "props": [
+    "chain",
+    "color",
+    "device",
+    "mute",
+    "name",
+    "pan",
+    "solo",
+    "volume",
+    "volume_db"
+   ],
+   "required": [
+    "chain",
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": [
+    [
+     "volume",
+     "volume_db"
+    ]
+   ]
+  },
+  {
+   "name": "clip_create",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "color",
+    "length",
+    "name",
+    "slot",
+    "track"
+   ],
+   "required": [
+    "length",
+    "slot",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_crop",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "clip"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_delete",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "clip",
+    "expect_name"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_duplicate",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "allow_overwrite"
+   ],
+   "props": [
+    "allow_overwrite",
+    "from",
+    "to"
+   ],
+   "required": [
+    "from"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_duplicate_loop",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "include_empty",
+    "limit",
+    "offset",
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "clip_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip",
+    "color",
+    "end_marker",
+    "gain",
+    "loop_end",
+    "loop_start",
+    "looping",
+    "muted",
+    "name",
+    "pitch_coarse",
+    "pitch_fine",
+    "start_marker",
+    "warping"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "cue_create",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "name",
+    "time"
+   ],
+   "required": [
+    "time"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "cue_delete",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "expect_time",
+    "index"
+   ],
+   "required": [
+    "index"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "cue_jump",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "direction",
+    "index"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": [
+    [
+     "direction",
+     "index"
+    ]
+   ]
+  },
+  {
+   "name": "cue_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "limit",
+    "offset"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "cue_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "index",
+    "name"
+   ],
+   "required": [
+    "index",
+    "name"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "device_delete",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "device",
+    "expect_name"
+   ],
+   "required": [
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "device_enable",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "device",
+    "enabled"
+   ],
+   "required": [
+    "device",
+    "enabled"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "device_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "device",
+    "limit",
+    "offset"
+   ],
+   "required": [
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "device_insert",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "container",
+    "index",
+    "name"
+   ],
+   "required": [
+    "container",
+    "name"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "device_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "container",
+    "limit",
+    "offset"
+   ],
+   "required": [
+    "container"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "drum_pad_clear",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "device",
+    "note"
+   ],
+   "required": [
+    "device",
+    "note"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "drum_pad_copy",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "device",
+    "from_note",
+    "to_note"
+   ],
+   "required": [
+    "device",
+    "from_note",
+    "to_note"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "drum_pad_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "device",
+    "mute",
+    "note",
+    "solo"
+   ],
+   "required": [
+    "device",
+    "note"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "drum_pads_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "all",
+    "device",
+    "limit",
+    "offset"
+   ],
+   "required": [
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "envelope_clear",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "clip",
+    "param"
+   ],
+   "required": [
+    "clip",
+    "param"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "envelope_clear_all",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "clip"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "envelope_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip",
+    "from",
+    "param",
+    "points",
+    "to"
+   ],
+   "required": [
+    "clip",
+    "param"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "envelope_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "envelope_set",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "replace"
+   ],
+   "props": [
+    "clip",
+    "param",
+    "replace",
+    "steps"
+   ],
+   "required": [
+    "clip",
+    "param",
+    "steps"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "meters_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "all",
+    "tracks"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": [
+    [
+     "all",
+     "tracks"
+    ]
+   ]
+  },
+  {
+   "name": "mixer_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "mixer_set",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "volume",
+    "volume_db"
+   ],
+   "props": [
+    "crossfade_assign",
+    "crossfader",
+    "cue_volume",
+    "pan",
+    "sends",
+    "track",
+    "volume",
+    "volume_db"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": [
+    [
+     "volume",
+     "volume_db"
+    ]
+   ]
+  },
+  {
+   "name": "notes_add",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip",
+    "notes"
+   ],
+   "required": [
+    "clip",
+    "notes"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "notes_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip",
+    "from_pitch",
+    "from_time",
+    "limit",
+    "offset",
+    "pitch_span",
+    "time_span"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "notes_modify",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "clip",
+    "notes"
+   ],
+   "required": [
+    "clip",
+    "notes"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "notes_quantize",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "amount",
+    "clip",
+    "grid",
+    "pitch"
+   ],
+   "required": [
+    "clip",
+    "grid"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "notes_remove",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "clip",
+    "from_pitch",
+    "from_time",
+    "note_ids",
+    "pitch_span",
+    "time_span"
+   ],
+   "required": [
+    "clip"
+   ],
+   "at_least_one": false,
+   "exclusive": [
+    [
+     "from_pitch",
+     "note_ids"
+    ],
+    [
+     "note_ids",
+     "pitch_span"
+    ],
+    [
+     "from_time",
+     "note_ids"
+    ],
+    [
+     "note_ids",
+     "time_span"
+    ]
+   ]
+  },
+  {
+   "name": "param_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "at_value",
+    "param"
+   ],
+   "required": [
+    "param"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "param_set",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "value",
+    "items"
+   ],
+   "props": [
+    "device",
+    "items",
+    "param",
+    "value"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "rack_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "device"
+   ],
+   "required": [
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "rack_insert_chain",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "device",
+    "index"
+   ],
+   "required": [
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "rack_variation",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "action"
+   ],
+   "props": [
+    "action",
+    "device",
+    "index"
+   ],
+   "required": [
+    "action",
+    "device"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "re_enable_automation",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "redo",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "steps"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "routing_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "routing_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "input_channel",
+    "input_type",
+    "output_channel",
+    "output_type",
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_capture",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_create",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "color",
+    "index",
+    "name",
+    "tempo"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_delete",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "expect_name",
+    "scene"
+   ],
+   "required": [
+    "scene"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_duplicate",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "scene"
+   ],
+   "required": [
+    "scene"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_fire",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "as_selected",
+    "can_select_scene_on_launch",
+    "force_legato",
+    "scene"
+   ],
+   "required": [
+    "scene"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "limit",
+    "offset"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "scene_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "color",
+    "name",
+    "scene",
+    "tempo",
+    "time_signature"
+   ],
+   "required": [
+    "scene"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "slot_fire",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "launch_quantization",
+    "record_length",
+    "slot",
+    "track"
+   ],
+   "required": [
+    "slot",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "slot_status",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "slot",
+    "track"
+   ],
+   "required": [
+    "slot",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "slot_stop",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "slot",
+    "track"
+   ],
+   "required": [
+    "slot",
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "song_info",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "song_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "arrangement_overdub",
+    "clip_trigger_quantization",
+    "loop",
+    "loop_length",
+    "loop_start",
+    "metronome",
+    "record_mode",
+    "root_note",
+    "scale_name",
+    "session_record",
+    "signature_denominator",
+    "signature_numerator",
+    "tempo"
+   ],
+   "required": [],
+   "at_least_one": true,
+   "exclusive": []
+  },
+  {
+   "name": "song_set_time",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "time"
+   ],
+   "required": [
+    "time"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "stop_all_clips",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "quantized"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_create",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "color",
+    "ears_internal",
+    "index",
+    "name",
+    "type"
+   ],
+   "required": [
+    "type"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_delete",
+   "mutating": true,
+   "destructive": "always",
+   "conditions": [],
+   "props": [
+    "expect_name",
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_duplicate",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "include_clips",
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_list",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "include_master",
+    "include_returns",
+    "limit",
+    "offset"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_select",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_set",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "arm",
+    "color",
+    "fold_state",
+    "monitoring_state",
+    "mute",
+    "name",
+    "solo",
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "track_stop_clips",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "track"
+   ],
+   "required": [
+    "track"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "transport",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "action"
+   ],
+   "required": [
+    "action"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "trigger_session_record",
+   "mutating": true,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "record_length"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "undo",
+   "mutating": true,
+   "destructive": "conditional",
+   "conditions": [
+    "steps"
+   ],
+   "props": [
+    "steps"
+   ],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "undo_state",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "view_focus",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "view"
+   ],
+   "required": [
+    "view"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "view_get",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [],
+   "required": [],
+   "at_least_one": false,
+   "exclusive": []
+  },
+  {
+   "name": "view_show",
+   "mutating": false,
+   "destructive": "never",
+   "conditions": [],
+   "props": [
+    "view"
+   ],
+   "required": [
+    "view"
+   ],
+   "at_least_one": false,
+   "exclusive": []
+  }
+ ]
+}

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege: read-only for every job.
+permissions: read-all
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      # actions/checkout v4.4.0 (pinned commit)
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # actions/setup-node v4.4.0 (pinned commit)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.20.0 # exact pin; the project requires >= 22.14 (loudness tests need type stripping, 22.18+)
+
+      # Corepack reads "packageManager": "pnpm@12.1.0" from server/package.json.
+      - name: Enable pnpm 12.1.0 via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@12.1.0 --activate
+          pnpm --version
+
+      - name: Install (frozen lockfile, no install scripts)
+        working-directory: server
+        run: pnpm install --frozen-lockfile
+
+      - name: Server build and tests
+        working-directory: server
+        run: pnpm test
+
+      - name: Loudness tests
+        run: node --test loudness/test/
+
+      - name: Installer tests
+        run: node --test installer/test/
+
+      # actions/setup-python v5.6.0 (pinned commit)
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.11" # matches the CPython embedded in Live 12
+
+      - name: Remote Script tests
+        run: python -I -B -m unittest discover -s tests/remote_script -t .

@@ -1,0 +1,11 @@
+{
+  "name": "batuta",
+  "owner": { "name": "Paul Osinga" },
+  "plugins": [
+    {
+      "name": "batuta-transport",
+      "source": "./batuta-transport",
+      "description": "Ableton Live transport bar above the prompt (to start, back a bar, play, stop, forward a bar) through BatutaMCP"
+    }
+  ]
+}

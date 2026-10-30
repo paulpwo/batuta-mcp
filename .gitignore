@@ -1,0 +1,25 @@
+# Internal working notes, never published
+odd/
+
+# Dependencies and build output
+node_modules/
+dist/
+*.tgz
+
+# Tooling indexes and caches
+.codegraph/
+
+# Python
+*.pyc
+__pycache__/
+
+# OS / editor
+.DS_Store
+*.swp
+
+# Scratch and local-only files
+scratch/
+tmp/
+.scratch/
+*.log
+sbom*.json

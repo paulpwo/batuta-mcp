@@ -1,0 +1,123 @@
+name: Release
+
+# Runs only when a version tag is pushed. Publishing needs a manual approval
+# on the "release" environment (required reviewers configured in repo settings).
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions: read-all
+
+jobs:
+  verify:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      # actions/checkout v4.4.0 (pinned commit)
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # actions/setup-node v4.4.0 (pinned commit)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.20.0
+
+      - name: Enable pnpm 12.1.0 via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@12.1.0 --activate
+
+      - name: Install (frozen lockfile)
+        working-directory: server
+        run: pnpm install --frozen-lockfile
+
+      - name: Tag must match package version
+        working-directory: server
+        run: |
+          v="$(node -p "require('./package.json').version")"
+          test "refs/tags/v${v}" = "${GITHUB_REF}" || { echo "tag ${GITHUB_REF} != v${v}"; exit 1; }
+
+      - name: Server build and tests
+        working-directory: server
+        run: pnpm test
+
+      - name: Loudness tests
+        run: node --test loudness/test/
+
+      - name: Installer tests
+        run: node --test installer/test/
+
+      # actions/setup-python v5.6.0 (pinned commit)
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.11"
+
+      - name: Remote Script tests
+        run: python -I -B -m unittest discover -s tests/remote_script -t .
+
+  publish:
+    needs: verify
+    runs-on: macos-latest
+    timeout-minutes: 20
+    # Manual approval gate: the "release" environment has required reviewers.
+    environment: release
+    permissions:
+      contents: read
+      id-token: write      # OIDC: npm trusted publishing + provenance + attestation (this job only)
+      attestations: write  # actions/attest-build-provenance
+    steps:
+      # actions/checkout v4.4.0 (pinned commit)
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      # actions/setup-node v4.4.0 (pinned commit)
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.20.0
+          registry-url: https://registry.npmjs.org
+
+      - name: Enable pnpm 12.1.0 via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@12.1.0 --activate
+
+      # Trusted publishing (OIDC) needs npm >= 11.5.1. Node 22 bundles an older npm.
+      - name: Install npm 11.5.1 for trusted publishing
+        run: npm install --global npm@11.5.1
+
+      - name: Install (frozen lockfile)
+        working-directory: server
+        run: pnpm install --frozen-lockfile
+
+      # prepack (see package.json) wipes dist and rebuilds, so the tarball is built from source.
+      - name: Pack tarball
+        working-directory: server
+        run: pnpm pack --pack-destination "$RUNNER_TEMP/out"
+
+      # SBOM: pnpm 12.1.0 has a native `pnpm sbom` (verified with `pnpm sbom --help`),
+      # so the npm cyclonedx command is not needed.
+      - name: Generate CycloneDX SBOM
+        working-directory: server
+        run: pnpm sbom --sbom-format cyclonedx --sbom-type application > "$RUNNER_TEMP/out/batuta-mcp.cdx.json"
+
+      # actions/attest-build-provenance v2.4.0 (pinned commit)
+      - name: Attest tarball and SBOM provenance
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-path: |
+            ${{ runner.temp }}/out/*.tgz
+            ${{ runner.temp }}/out/batuta-mcp.cdx.json
+
+      # No token secret anywhere: npm exchanges the GitHub OIDC identity for a short-lived credential.
+      - name: Publish to npm with provenance
+        run: npm publish "$RUNNER_TEMP"/out/*.tgz --provenance --access public
+
+      # actions/upload-artifact v4.6.2 (pinned commit)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-files
+          path: |
+            ${{ runner.temp }}/out/*.tgz
+            ${{ runner.temp }}/out/batuta-mcp.cdx.json

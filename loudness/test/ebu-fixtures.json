@@ -1,0 +1,10 @@
+{
+  "name": "EBU Loudness Test Set v05",
+  "url": "https://tech.ebu.ch/files/live/sites/tech/files/shared/testmaterial/ebu-loudness-test-setv05.zip",
+  "sha256": null,
+  "sha256_note": "Download was refused (HTTP 403, Cloudflare bot challenge) on 2026-10-27, so no hash could be recorded and no audio was fetched. Fill this in after a manual download: shasum -a 256 <zip>. The test never verifies the hash itself; it only reads WAV files from BATUTA_EBU_DIR.",
+  "env": "BATUTA_EBU_DIR",
+  "default_dir": "/private/tmp/claude-501/-Users-developer-Documents/81e374a6-8b53-4009-8d37-63536d6ebd93/scratchpad/ebu-v5",
+  "files": "unrecorded (set was not obtained); ebu.test.ts discovers WAV files by the tokens seq-3341-<case> and seq-3342-<case> in their names",
+  "expected_values_source": ["https://tech.ebu.ch/docs/tech/tech3341.pdf (Table 1)", "https://tech.ebu.ch/docs/tech/tech3342.pdf (Table 1)"]
+}
