@@ -23,10 +23,9 @@ jobs:
         with:
           node-version: 22.20.0
 
-      - name: Enable pnpm 12.1.0 via corepack
-        run: |
-          corepack enable
-          corepack prepare pnpm@12.1.0 --activate
+      # The corepack bundled with Node 22 cannot activate pnpm 12, so install the exact version with npm.
+      - name: Install pnpm 12.1.0
+        run: npm install --global --ignore-scripts pnpm@12.1.0
 
       - name: Install (frozen lockfile)
         working-directory: server
@@ -78,10 +77,9 @@ jobs:
           node-version: 22.20.0
           registry-url: https://registry.npmjs.org
 
-      - name: Enable pnpm 12.1.0 via corepack
-        run: |
-          corepack enable
-          corepack prepare pnpm@12.1.0 --activate
+      # The corepack bundled with Node 22 cannot activate pnpm 12, so install the exact version with npm.
+      - name: Install pnpm 12.1.0
+        run: npm install --global --ignore-scripts pnpm@12.1.0
 
       # Trusted publishing (OIDC) needs npm >= 11.5.1. Node 22 bundles an older npm.
       - name: Install npm 11.5.1 for trusted publishing

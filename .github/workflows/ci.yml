@@ -27,11 +27,10 @@ jobs:
         with:
           node-version: 22.20.0 # exact pin; the project requires >= 22.14 (loudness tests need type stripping, 22.18+)
 
-      # Corepack reads "packageManager": "pnpm@12.1.0" from server/package.json.
-      - name: Enable pnpm 12.1.0 via corepack
+      # The corepack bundled with Node 22 cannot activate pnpm 12, so install the exact version with npm.
+      - name: Install pnpm 12.1.0
         run: |
-          corepack enable
-          corepack prepare pnpm@12.1.0 --activate
+          npm install --global --ignore-scripts pnpm@12.1.0
           pnpm --version
 
       - name: Install (frozen lockfile, no install scripts)
