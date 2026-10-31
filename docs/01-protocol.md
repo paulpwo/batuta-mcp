@@ -714,7 +714,7 @@ Normative; they refine 10.1–10.7.
 | `destructive` | `confirm` | `confirm/disabled`; env `BATUTA_DESTRUCTIVE` (section 9.2) |
 | `gain_guard.max_jump_db` | 6.0 | section 9.4 |
 | `gain_guard.max_master_db` | 0.0 | section 9.4 |
-| `browser.allow_plugins` | false | VST/AU loading via `browser_load` (7.10) |
+| `browser.allow_plugins` | true | VST/AU loading via `browser_load`; `false` blocks the `plugins` category and removes plugins that arrive inside racks or presets (7.10) |
 | `browser.allow_max_for_live` | true | Max for Live (`.amxd`, M4L names, the `max_for_live` category, `Max*` devices) loads and stays; `false` restores the block, the post-load sweep and the refusal of racks holding M4L (7.10) |
 | `browser.allow_external_devices` | true | External Audio Effect / External Instrument load and stay; recording with a live external input asks the owner once (5.6); `false` restores the block and the refusals |
 | `browser.allow_user_presets` | true | presets from `user_library`, `packs`, `current_project` via `browser_load`; risk documented in 7.10 |

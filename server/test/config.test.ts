@@ -24,7 +24,7 @@ test("defaults match Appendix B", () => {
   assert.equal(c.confirm, "irreversible");
   assert.equal(c.gainGuard.maxJumpDb, 6.0);
   assert.equal(c.gainGuard.maxMasterDb, 0.0);
-  assert.equal(c.browser.allowPlugins, false);
+  assert.equal(c.browser.allowPlugins, true, "installed VST/AU plugins load by default (owner decision 2026-10-30, zero config)");
   assert.equal(c.browser.allowMaxForLive, true, "Max for Live loads by default (owner decision 2026-10-30)");
   assert.equal(c.browser.allowExternalDevices, true, "External devices load by default");
   assert.equal(c.browser.allowUserPresets, true);
@@ -195,6 +195,16 @@ test("an explicit allow_user_presets false still blocks presets", () => {
     const file = write(dir, JSON.stringify({ browser: { allow_user_presets: false } }));
     const { config } = loadConfig({ configPath: file, env: {} });
     assert.equal(config.browser.allowUserPresets, false);
+    assert.equal(config.browser.allowPlugins, true, "the other flags keep their defaults");
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("an explicit allow_plugins false still blocks plugins", () => {
+  const dir = makeDir();
+  try {
+    const file = write(dir, JSON.stringify({ browser: { allow_plugins: false } }));
+    const { config } = loadConfig({ configPath: file, env: {} });
     assert.equal(config.browser.allowPlugins, false);
+    assert.equal(config.browser.allowUserPresets, true);
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });

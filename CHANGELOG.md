@@ -2,6 +2,11 @@
 
 All notable changes are documented here. The format follows Keep a Changelog and the project uses Semantic Versioning.
 
+## [0.2.1] - 2026-10-30
+
+### Fixed
+- VST/AU plugins you have installed now load by default (`browser.allow_plugins` defaults to `true`), like Max for Live and External devices. A fresh install refused them until a config file enabled them. Set it to `false` to block plugins.
+
 ## [0.2.0] - 2026-10-30
 
 ### Added

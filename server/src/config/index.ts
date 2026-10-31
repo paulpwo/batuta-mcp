@@ -63,7 +63,7 @@ export function defaultConfig(): ServerConfig {
     destructive: "confirm",
     confirm: "irreversible",
     gainGuard: { maxJumpDb: 6.0, maxMasterDb: 0.0 },
-    browser: { allowPlugins: false, allowUserPresets: true, allowMaxForLive: true, allowExternalDevices: true },
+    browser: { allowPlugins: true, allowUserPresets: true, allowMaxForLive: true, allowExternalDevices: true },
     sampleRoots: [],
     allowAudioImport: true,
     ears: { enabled: true, maxBytes: 256 * 1024 * 1024, maxBeats: 64, roots: [], setRoots: [] },
