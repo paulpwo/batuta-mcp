@@ -24,6 +24,8 @@ PREVIOUS="$DIR.previous"
 # Claude Desktop: app bundle folders (BATUTA_APPLICATIONS_DIR is for tests) and its config file.
 APPS_DIR="${BATUTA_APPLICATIONS_DIR:-/Applications}"
 DESKTOP_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
+# Claude Code reads its user settings from CLAUDE_CONFIG_DIR when set, else ~/.claude.
+CLAUDE_SETTINGS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
 DRY_RUN=0
 VERSION_ARG=""
 
@@ -100,10 +102,13 @@ if [ "$DRY_RUN" = 1 ]; then
   else
     say "  5. 'claude' was not found: print the registration command instead."
   fi
+  if command -v claude > /dev/null 2>&1; then
+    say "  6. Run: $NODE_ABS $DIR/installer/claude-code-settings.mjs tui --settings $CLAUDE_SETTINGS (sets \"tui\": \"fullscreen\", the renderer the transport bar's buttons need; backup first)."
+  fi
   if has_desktop; then
-    say "  6. Claude Desktop found: add the batutaMCP entry to $DESKTOP_CONFIG (other servers untouched, backup first; refused if the file is a symlink or not valid JSON)."
+    say "  7. Claude Desktop found: add the batutaMCP entry to $DESKTOP_CONFIG (other servers untouched, backup first; refused if the file is a symlink or not valid JSON)."
   else
-    say "  6. Claude Desktop not found: skipped."
+    say "  7. Claude Desktop not found: skipped."
   fi
   exit 0
 fi
@@ -170,6 +175,9 @@ if command -v claude > /dev/null 2>&1; then
   claude mcp add --scope user batutaMCP -- "$NODE_ABS" --disallow-code-generation-from-strings "$BIN" \
     || die "'claude mcp add' failed; run the command above by hand."
   say "Registered batutaMCP with Claude Code."
+  # The transport bar's buttons take clicks only under the fullscreen renderer: always set it.
+  "$NODE_ABS" "$DIR/installer/claude-code-settings.mjs" tui --settings "$CLAUDE_SETTINGS" \
+    || say "Could not update $CLAUDE_SETTINGS (see above). For the transport bar's buttons, type /tui fullscreen in Claude Code."
 else
   say "Claude Code ('claude') was not found. To register the server, run:"
   say "  claude mcp add --scope user batutaMCP -- '$NODE_ABS' --disallow-code-generation-from-strings '$BIN'"

@@ -44,6 +44,7 @@ export function makeFixtureRoot(version = '1.2.3') {
   put(r, 'remote_script/BatutaMCP/notes.txt', 'nope\n');
   put(r, 'installer/install.mjs', fs.readFileSync(path.join(REPO, 'installer', 'install.mjs'), 'utf8'));
   put(r, 'installer/desktop-config.mjs', fs.readFileSync(path.join(REPO, 'installer', 'desktop-config.mjs'), 'utf8'));
+  put(r, 'installer/claude-code-settings.mjs', fs.readFileSync(path.join(REPO, 'installer', 'claude-code-settings.mjs'), 'utf8'));
   put(r, 'installer/test/x.test.mjs', 'nope\n');
   put(r, 'installer/pack-release.mjs', 'nope\n');
   put(r, 'clients/claude-code/.claude-plugin/marketplace.json', '{}\n');

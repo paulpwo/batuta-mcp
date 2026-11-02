@@ -83,8 +83,21 @@ test('fresh install: files in ~/.batuta-mcp, Remote Script installed, claude re-
   assert.match(r.stdout, /Control Surface/);
   assert.match(r.stdout, /batuta_status/);
   assert.match(r.stdout, /clients\/claude-code/);
+  const settings = JSON.parse(fs.readFileSync(path.join(sb.home, '.claude', 'settings.json'), 'utf8'));
+  assert.deepEqual(settings, { tui: 'fullscreen' }, 'Claude Code set to the fullscreen renderer');
   assert.equal(fs.readdirSync(sb.home).filter((n) => n.includes('staging')).length, 0, 'no staging leftovers');
   assert.equal(fs.readdirSync(sb.tmp).length, 0, 'temp download dir cleaned');
+});
+
+test('install sets the fullscreen renderer over any other, in CLAUDE_CONFIG_DIR when set, keeping other settings', () => {
+  const sb = sandbox();
+  const { base } = release('1.2.3');
+  const config = path.join(sb.root, 'claude-config');
+  put(config, 'settings.json', JSON.stringify({ tui: 'default', model: 'x' }, null, 2) + '\n', 0o600);
+  const r = run(sb, base, [], { CLAUDE_CONFIG_DIR: config });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.deepEqual(JSON.parse(fs.readFileSync(path.join(config, 'settings.json'), 'utf8')), { tui: 'fullscreen', model: 'x' });
+  assert.ok(!fs.existsSync(path.join(sb.home, '.claude')), '~/.claude untouched when CLAUDE_CONFIG_DIR is set');
 });
 
 test('claude remove failing (not registered yet) is ignored', () => {

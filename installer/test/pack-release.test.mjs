@@ -24,6 +24,7 @@ test('pack-release: the tarball holds exactly the allowlist for the fixture tree
     'VERSION',
     'clients/claude-code/.claude-plugin/marketplace.json',
     'clients/claude-code/batuta-transport/hooks/register.tsx',
+    'installer/claude-code-settings.mjs',
     'installer/desktop-config.mjs',
     'installer/install.mjs',
     'remote_script/BatutaMCP/__init__.py',

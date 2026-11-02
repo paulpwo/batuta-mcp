@@ -61,7 +61,7 @@ if (!/^\d+\.\d+\.\d+$/.test(version)) die('version must be X.Y.Z, got: ' + versi
 if (!fs.existsSync(rd('server/dist/src/bin.js'))) die('the server is not built (run "pnpm run build" in server/ first)');
 
 // What ships, as a sorted list of repo-relative files.
-const files = new Set(['server/package.json', 'installer/install.mjs', 'installer/desktop-config.mjs']);
+const files = new Set(['server/package.json', 'installer/install.mjs', 'installer/desktop-config.mjs', 'installer/claude-code-settings.mjs']);
 for (const f of listFiles(root, 'server/dist/src', (r) => !junk(r))) files.add(f);
 for (const f of listFiles(root, 'remote_script/BatutaMCP', (r) => r.endsWith('.py') && !r.slice('remote_script/BatutaMCP/'.length).includes('/'))) files.add(f);
 for (const f of listFiles(root, 'clients/claude-code', (r) => !junk(r))) files.add(f);

@@ -17,7 +17,7 @@ One command installs BatutaMCP, and the same command upgrades it:
 curl -fsSL https://github.com/paulpwo/batuta-mcp/releases/latest/download/install.sh | bash
 ```
 
-It downloads the latest release, checks its SHA-256, unpacks it into `~/.batuta-mcp` (the previous copy is kept as `~/.batuta-mcp.previous`), installs the Remote Script for Live, and registers the server with Claude Code (`claude`) and Claude Desktop when they are installed. It needs macOS and Node.js 22.14 or later; no pnpm, no build, no sudo. Claude Desktop's config gets only the `batutaMCP` entry (backup first; a config that is not valid JSON is left alone and the entry is printed instead).
+It downloads the latest release, checks its SHA-256, unpacks it into `~/.batuta-mcp` (the previous copy is kept as `~/.batuta-mcp.previous`), installs the Remote Script for Live, and registers the server with Claude Code (`claude`) and Claude Desktop when they are installed. It needs macOS and Node.js 22.14 or later; no pnpm, no build, no sudo. Claude Desktop's config gets only the `batutaMCP` entry (backup first; a config that is not valid JSON is left alone and the entry is printed instead). With Claude Code it also sets `"tui": "fullscreen"` in `~/.claude/settings.json` (or `$CLAUDE_CONFIG_DIR/settings.json`), whatever it was, with a backup first: the transport bar's buttons only take clicks under the fullscreen renderer. `/tui default` switches back.
 
 - Preview without writing anything: end the command with `bash -s -- --dry-run` instead of `bash`.
 - A specific release: `bash -s -- --version v0.1.0`.
