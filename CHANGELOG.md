@@ -2,7 +2,7 @@
 
 All notable changes are documented here. The format follows Keep a Changelog and the project uses Semantic Versioning.
 
-## [Unreleased]
+## [0.3.0] - 2026-11-02
 
 ### Changed
 - `install.sh` sets Claude Code to the fullscreen renderer (`"tui": "fullscreen"` in `~/.claude/settings.json`, or `$CLAUDE_CONFIG_DIR/settings.json`), whatever it was, with a backup first. The transport bar's buttons only take clicks under that renderer; on the default one the bar showed but nothing pressed. `/tui default` switches back.
