@@ -23,4 +23,4 @@ Requirements: Node 22.18 or newer, pnpm 12.1.0 (via corepack), Python 3.11 or ne
 
 ## Pull requests
 
-Keep them small and focused, use Conventional Commit messages, and describe the behavior change and the tests that cover it. Report vulnerabilities privately as described in `SECURITY.md`.
+Keep them small and focused, use Conventional Commit messages (their type sets the next version: see [docs/06-release.md](docs/06-release.md)), and describe the behavior change and the tests that cover it. Report vulnerabilities privately as described in `SECURITY.md`.

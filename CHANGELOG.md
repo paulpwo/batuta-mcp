@@ -2,6 +2,12 @@
 
 All notable changes are documented here. The format follows Keep a Changelog and the project uses Semantic Versioning.
 
+## [Unreleased]
+
+### Changed
+- `install.sh` sets Claude Code to the fullscreen renderer (`"tui": "fullscreen"` in `~/.claude/settings.json`, or `$CLAUDE_CONFIG_DIR/settings.json`), whatever it was, with a backup first. The transport bar's buttons only take clicks under that renderer; on the default one the bar showed but nothing pressed. `/tui default` switches back.
+- Releases bump the version by themselves: after a green CI on `main`, the commit types since the last tag decide it (`feat` minor, `fix`/`refactor`/`chore` patch, `!` or `BREAKING CHANGE` major; only docs, tests or CI release nothing), and the workflow commits `server/package.json` and the dated CHANGELOG section as `chore: release X.Y.Z` before tagging.
+
 ## [0.2.3] - 2026-11-02
 
 ### Changed
