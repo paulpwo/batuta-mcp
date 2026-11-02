@@ -1,6 +1,6 @@
 {
   "name": "batuta-transport",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ableton Live transport bar above the prompt (to start, back a bar, play, stop, forward a bar) through BatutaMCP",
   "license": "MIT",
   "types": "./types/index.d.ts"

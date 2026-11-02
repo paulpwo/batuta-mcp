@@ -2,6 +2,11 @@
 
 All notable changes are documented here. The format follows Keep a Changelog and the project uses Semantic Versioning.
 
+## [0.2.2] - 2026-11-02
+
+### Fixed
+- Claude Code transport bar (`batuta-transport` 0.1.1): while Live is closed it no longer calls `get_transport`. It checks that `live.sock` exists first, so a closed Live no longer fills the session with failed MCP task notices. The bar still hides when Live closes and comes back when it opens.
+
 ## [0.2.1] - 2026-10-30
 
 ### Fixed

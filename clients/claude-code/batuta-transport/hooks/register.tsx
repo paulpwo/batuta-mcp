@@ -12,6 +12,10 @@ const IDLE_TICKS = 4
 const DETECT_TICKS = 5
 // One miss can be a busy moment; two in a row mean Live closed.
 const MISSES_TO_DROP = 2
+// The Remote Script binds this socket while Live runs (the server's default
+// runtime directory). While it is missing nothing calls Batuta, so a closed
+// Live raises no failed MCP tasks in the transcript.
+const SOCKET = 'Library/Application Support/BatutaMCP/live.sock'
 
 const OFFLINE: Transport = {
   isConnected: false,
@@ -120,10 +124,30 @@ async function hasBatuta($: EngineInterface): Promise<boolean> {
   return tools.some(tool => tool.name.startsWith(TOOL_PREFIX))
 }
 
+/**
+ * True when Live's socket is there, or when the home folder is unknown (then
+ * the call itself decides). A missing socket marks Live gone at once.
+ */
+async function hasSocket($: EngineInterface): Promise<boolean> {
+  const home = await $.env.get('HOME')
+  if (home === undefined) return true
+  const isThere = await $.fs.exists(`${home}/${SOCKET}`).catch(() => true)
+  if (!isThere) {
+    misses = MISSES_TO_DROP
+    const last = await read($, transport)
+    if (last.isConnected) {
+      await update($, transport, () => ({ ...last, isConnected: false, isPlaying: false, error: 'Live is closed' }))
+      await update($, isHidden, () => false)
+    }
+  }
+  return isThere
+}
+
 /** Shows the band again and reads Live at once. */
 async function reveal($: EngineInterface): Promise<boolean> {
   isDetected = true
   await update($, isHidden, () => false)
+  if (!(await hasSocket($))) return false
   return call($, 'get_transport')
 }
 
@@ -139,7 +163,8 @@ async function tick($: EngineInterface) {
   }
   const state = await read($, transport)
   const every = !state.isConnected ? DETECT_TICKS : state.isPlaying ? 1 : IDLE_TICKS
-  if (ticks % every === 0) await call($, 'get_transport')
+  if (ticks % every !== 0) return
+  if (await hasSocket($)) await call($, 'get_transport')
 }
 
 export const register: Register = on => {

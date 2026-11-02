@@ -17,11 +17,23 @@ const BAND = {
 
 const SONG = { is_playing: false, current_song_time: 8, tempo: 95, signature: [4, 4] }
 
-type World = { calls: { tool: string; args: unknown }[]; isLive: boolean; song: typeof SONG }
+type World = {
+  calls: { tool: string; args: unknown }[]
+  isLive: boolean
+  hasSocket: boolean
+  song: typeof SONG
+}
 
-/** Stands for the engine: Batuta's tools when `hasBatuta`, Live answering while `isLive`. */
+const SOCKET = '/Users/test/Library/Application Support/BatutaMCP/live.sock'
+
+/**
+ * Stands for the engine: Batuta's tools when `hasBatuta`, Live answering while
+ * `isLive`, and Live's socket on disk while `hasSocket`.
+ */
 function world(on: On, hasBatuta: boolean): World {
-  const seen: World = { calls: [], isLive: true, song: SONG }
+  const seen: World = { calls: [], isLive: true, hasSocket: true, song: SONG }
+  on('env.get', () => ({ value: '/Users/test' }))
+  on('fs.exists', (_, e) => ({ value: e.path === SOCKET && seen.hasSocket }))
   on('command.register', () => ({ value: { command: 'transport' } }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('tool.list', () => ({
@@ -97,6 +109,37 @@ test('the band goes away when Live closes and comes back with it', async ($, on)
   await clock.advance(10_000)
   shown = await bandText($, 'terminal')
   expect(shown.line?.text).toBe('Stopped  bar 3.1  95.0 BPM  4/4')
+  await shown.ui.unmount()
+})
+
+test('while Live is closed nothing calls Batuta, and the band comes back when Live opens', async ($, on) => {
+  const clock = mock.clock(on)
+  const seen = world(on, true)
+  seen.hasSocket = false
+  seen.isLive = false
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+  await clock.advance(60_000)
+
+  expect(seen.calls.length).toBe(0)
+  let shown = await bandText($, 'terminal')
+  expect(shown.line).toBeUndefined()
+  await shown.ui.unmount()
+
+  seen.hasSocket = true
+  seen.isLive = true
+  await clock.advance(10_000)
+  shown = await bandText($, 'terminal')
+  expect(shown.line?.text).toBe('Stopped  bar 3.1  95.0 BPM  4/4')
+  await shown.ui.unmount()
+
+  // Closing Live removes the socket: the band hides with no failed call.
+  const before = seen.calls.length
+  seen.hasSocket = false
+  seen.isLive = false
+  await clock.advance(30_000)
+  expect(seen.calls.length).toBe(before)
+  shown = await bandText($, 'terminal')
+  expect(shown.line).toBeUndefined()
   await shown.ui.unmount()
 })
 
