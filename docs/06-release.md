@@ -23,7 +23,7 @@ Any other push to `main` does nothing. A failing CI run never releases.
 
 In one commit on `main`:
 
-1. Set the new version in all three places that carry it: `server/package.json`, `server/src/version.ts` (`VERSION`) and `remote_script/BatutaMCP/limits.py` (`SCRIPT_VERSION`). A test (`installer/test/version.test.mjs`) fails if they differ.
+1. Set the new version in `server/package.json`, the only place it is written. The server reads it at startup; the installer writes it into the `limits.py` it installs (`STAMPED_VERSION`), and a Remote Script linked for development reads the checkout's `server/package.json`. `installer/test/version.test.mjs` fails if a version is written anywhere else.
 2. Rename the `Unreleased` section of `CHANGELOG.md` to `## [X.Y.Z] - YYYY-MM-DD`.
 
 Push it. When CI passes, the workflow tags that exact commit and publishes the Release. `server/package.json` keeps `"private": true` so the package can never reach npm by accident.

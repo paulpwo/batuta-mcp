@@ -2,11 +2,13 @@
 
 This is the ONLY module that touches the filesystem. The exhaustive list of operations is in
 spec section 2.4: mkdir/chmod/lstat on the runtime dir; create-exclusive, link, unlink and read of
-the token; connect/bind/chmod/unlink on the socket path. Nothing here ever logs or returns the
+the token; connect/bind/chmod/unlink on the socket path; and a read of the checkout's
+server/package.json for the version of a development link. Nothing here ever logs or returns the
 token inside an error message.
 """
 
 import errno
+import json
 import os
 import re
 import secrets
@@ -20,6 +22,9 @@ TOKEN_NAME = "token"
 TOKEN_LENGTH = 64
 _TOKEN_PATTERN = re.compile(rb"^[0-9a-f]{64}$")
 _STALE_PROBE_TIMEOUT_S = 0.2
+_PACKAGE_JSON_MAX_BYTES = 64 * 1024
+_VERSION_PATTERN = re.compile(r"^[0-9A-Za-z.+-]{1,32}$")
+_UNKNOWN_VERSION = "0.0.0"
 
 
 class RuntimeFileError(Exception):
@@ -141,6 +146,39 @@ def _read_token(path):
     if not _TOKEN_PATTERN.match(data):
         raise RuntimeFileError("token file %s does not hold 64 lowercase hex characters" % path)
     return data
+
+
+# ----------------------------------------------------------------- version
+
+def _checkout_version():
+    """The version in the checkout's server/package.json, for a Remote Script linked into Live for
+    development (an installed copy has it in limits.STAMPED_VERSION). Read-only, without following a
+    link at the file itself; "0.0.0" when it cannot be read, which the server refuses as too old."""
+    here = os.path.dirname(os.path.realpath(__file__))
+    path = os.path.join(here, "..", "..", "server", "package.json")
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    except OSError:
+        return _UNKNOWN_VERSION
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_size > _PACKAGE_JSON_MAX_BYTES:
+            return _UNKNOWN_VERSION
+        data = os.read(fd, _PACKAGE_JSON_MAX_BYTES + 1)
+    except OSError:
+        return _UNKNOWN_VERSION
+    finally:
+        os.close(fd)
+    try:
+        value = json.loads(data.decode("utf-8")).get("version")
+    except (ValueError, AttributeError):
+        return _UNKNOWN_VERSION
+    return value if isinstance(value, str) and _VERSION_PATTERN.match(value) else _UNKNOWN_VERSION
+
+
+# server/package.json is the one place a version is set: the installer writes it into limits.py of
+# the copy it installs, and a development link reads the checkout's package.json.
+SCRIPT_VERSION = limits.STAMPED_VERSION or _checkout_version()
 
 
 # ----------------------------------------------------------------- listener socket

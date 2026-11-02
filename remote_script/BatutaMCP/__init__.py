@@ -16,11 +16,10 @@ from .command_set import build_registry
 from .dispatcher import Dispatcher, MainThreadPump
 from .runtime_files import (RuntimeFileError, remove_socket, socket_identity, check_socket_path_length, default_runtime_dir,
                             ensure_runtime_dir, load_or_create_token, prepare_listener,
-                            SOCKET_NAME)
+                            SCRIPT_VERSION, SOCKET_NAME)
 from .server import ConnectionServer, ServerConfig
 from .state import ScriptState
 
-SCRIPT_VERSION = limits.SCRIPT_VERSION
 _VERSION_NUMBER = re.compile(r"\d+(?:\.\d+)+")
 
 

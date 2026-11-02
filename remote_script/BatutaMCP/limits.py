@@ -4,7 +4,9 @@ Every constant here mirrors one row of the spec so a change is a one-line, revie
 """
 
 PROTOCOL_VERSION = 1
-SCRIPT_VERSION = "0.2.2"
+# server/package.json is the one place a version is set. The installer writes it here in the copy it
+# installs; a development link keeps None and runtime_files reads the checkout's package.json instead.
+STAMPED_VERSION = None
 
 # Framing and JSON shape.
 MAX_FRAME_BYTES = 1_048_576

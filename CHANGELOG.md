@@ -2,6 +2,11 @@
 
 All notable changes are documented here. The format follows Keep a Changelog and the project uses Semantic Versioning.
 
+## [Unreleased]
+
+### Changed
+- `server/package.json` is now the only place the version is set. The server reads it at startup, the installer writes it into the Remote Script copy it installs, and a development link reads it from the checkout. Cutting a version no longer means editing `server/src/version.ts` and `remote_script/BatutaMCP/limits.py` too.
+
 ## [0.2.2] - 2026-11-02
 
 ### Fixed

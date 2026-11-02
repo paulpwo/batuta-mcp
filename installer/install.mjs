@@ -150,6 +150,28 @@ function parseScriptVersion(text) {
   return isSafeVersion(v) ? v : 'unknown';
 }
 
+/** The line limits.py carries in the checkout; the installed copy has the version in its place. */
+const STAMP_LINE = 'STAMPED_VERSION = None';
+
+/** limits.py with its STAMP_LINE (a whole line) set to `version`, or null when it has none. */
+function stampVersion(text, version) {
+  const lines = text.split('\n');
+  const at = lines.indexOf(STAMP_LINE);
+  if (at < 0) return null;
+  lines.splice(at, 1, 'STAMPED_VERSION = "' + version + '"');
+  return lines.join('\n');
+}
+
+/** The version in server/package.json beside the package source (<repo>/remote_script/BatutaMCP), or null. */
+function readPackageVersion(srcDir) {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(srcDir, '..', '..', 'server', 'package.json'), 'utf8'));
+    return pkg !== null && typeof pkg === 'object' && isSafeVersion(pkg.version) ? pkg.version : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Read the package's top-level .py files (regular files only). */
 export function readSource(srcDir = DEFAULT_SRC) {
   let entries;
@@ -166,10 +188,18 @@ export function readSource(srcDir = DEFAULT_SRC) {
   if (!files.has('__init__.py')) {
     throw fail('bad_source', ('Package source has no __init__.py: ' + (srcDir)));
   }
+  // server/package.json is the one place a version is set: write it into the copy of limits.py that
+  // gets installed (and hashed), so the installed Remote Script reports the release's version.
+  const pkgVersion = readPackageVersion(srcDir);
+  let limits = files.has('limits.py') ? files.get('limits.py').toString('utf8') : '';
+  const stamped = pkgVersion ? stampVersion(limits, pkgVersion) : null;
+  if (stamped !== null) {
+    limits = stamped;
+    files.set('limits.py', Buffer.from(limits, 'utf8'));
+  }
+  const version = pkgVersion ?? parseScriptVersion(limits);
   const names = [...files.keys()].sort();
   const hashes = new Map(names.map((n) => [n, sha256(files.get(n))]));
-  const limits = files.has('limits.py') ? files.get('limits.py').toString('utf8') : '';
-  const version = parseScriptVersion(limits);
   return { files, names, hashes, version };
 }
 

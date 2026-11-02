@@ -3,7 +3,7 @@
 from . import (arrangement_commands, browser_commands, clip_commands, core_commands, device_commands,
                envelope_commands, mixer_commands, rack_commands, scene_commands, session_commands,
                track_commands, view_commands)
-from .limits import SCRIPT_VERSION
+from .runtime_files import SCRIPT_VERSION
 from .registry import CommandRegistry
 
 

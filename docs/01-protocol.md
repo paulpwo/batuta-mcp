@@ -87,7 +87,7 @@ The TypeScript server makes no outbound network calls and spawns no processes ex
 
 ### 2.4 File operations the Remote Script may perform (exhaustive)
 
-`mkdir`/`chmod`/`lstat` on the runtime dir; create-exclusive, link, unlink, read of the token; `connect`/`bind`/`chmod`/`unlink` on `live.sock`. Nothing else: no other open, no `os.system`, no `subprocess`, no `eval`/`exec`/`compile`/`__import__` on client data, no `getattr`/`setattr` with client-supplied names, no network except the AF_UNIX listener, no threads other than one socket thread.
+`mkdir`/`chmod`/`lstat` on the runtime dir; create-exclusive, link, unlink, read of the token; `connect`/`bind`/`chmod`/`unlink` on `live.sock`; a read-only open (no link followed) of the checkout's `server/package.json` for the version, only when the script runs from a development link (an installed copy has the version written into `limits.py` by the installer). Nothing else: no other open, no `os.system`, no `subprocess`, no `eval`/`exec`/`compile`/`__import__` on client data, no `getattr`/`setattr` with client-supplied names, no network except the AF_UNIX listener, no threads other than one socket thread.
 
 ### 2.5 Deviation from the feature document
 
